@@ -20,7 +20,7 @@ public class DoorEventProcessor implements EventProcessor {
         }
     }
 
-    private static boolean isDoorEvent(SensorEvent event) {
+    private boolean isDoorEvent(SensorEvent event) {
         return event.getType() == DOOR_OPEN || event.getType() == DOOR_CLOSED;
     }
 }

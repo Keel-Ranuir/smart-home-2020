@@ -20,7 +20,7 @@ public class LightEventProcessor implements EventProcessor {
         }
     }
 
-    private static boolean isLightEvent(SensorEvent event) {
+    private boolean isLightEvent(SensorEvent event) {
         return event.getType() == LIGHT_ON || event.getType() == LIGHT_OFF;
     }
 }

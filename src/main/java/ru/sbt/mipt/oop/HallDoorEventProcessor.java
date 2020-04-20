@@ -21,8 +21,8 @@ public class HallDoorEventProcessor implements EventProcessor {
             }
         }
     }
-
-    private static void turnOffAllLights(SmartHome smartHome) {
+ 
+    private void turnOffAllLights(SmartHome smartHome) {
         for (Room room : smartHome.getRooms()) {
             for (Light light : room.getLights()) {
                 light.setOn(false);
