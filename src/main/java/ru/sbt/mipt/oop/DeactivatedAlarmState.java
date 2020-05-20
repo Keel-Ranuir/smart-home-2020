@@ -20,6 +20,6 @@ public class DeactivatedAlarmState implements AlarmState {
 
     @Override
     public void alert() {
-        //cannot alert deactivated alarm
+        alarm.setState(new AlertAlarmState(alarm));
     }
 }

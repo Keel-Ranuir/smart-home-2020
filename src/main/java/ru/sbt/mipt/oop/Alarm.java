@@ -12,7 +12,7 @@ public class Alarm implements Actionable {
         return state;
     }
 
-    public void setCode(String code) {
+    void setCode(String code) {
         this.code = code;
     }
 
