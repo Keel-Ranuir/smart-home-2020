@@ -11,24 +11,32 @@ public class HallDoorEventProcessor implements EventProcessor {
             return;
         }
 
-        for (Room room : smartHome.getRooms()) {
-            for (Door door : room.getDoors()) {
-                if (door.getId().equals(event.getObjectId())) {
-                    if (room.getName().equals("hall")) {
-                        turnOffAllLights(smartHome);
-                    }
+        smartHome.execute(component -> {
+            if (component instanceof Room) {
+                Room room = (Room) component;
+                if (room.getName().equals("hall")) {
+                    room.execute(hallComponent -> {
+                        if (hallComponent instanceof Door) {
+                            Door door = (Door) hallComponent;
+                            if (door.getId().equals(event.getObjectId())) {
+                                door.setOpen(false);
+                                turnOffAllLights(smartHome);
+                            }
+                        }
+                    });
                 }
             }
-        }
+        });
     }
  
     private void turnOffAllLights(SmartHome smartHome) {
-        for (Room room : smartHome.getRooms()) {
-            for (Light light : room.getLights()) {
+        smartHome.execute(component -> {
+            if (component instanceof Light) {
+                Light light = (Light) component;
                 light.setOn(false);
                 SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
                 CommandSender.sendCommand(command);
             }
-        }
+        });
     }
 }

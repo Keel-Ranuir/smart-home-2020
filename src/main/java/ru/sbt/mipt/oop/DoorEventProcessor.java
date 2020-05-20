@@ -8,15 +8,16 @@ public class DoorEventProcessor implements EventProcessor {
     @Override
     public void processEvent(SmartHome smartHome, SensorEvent event) {
         if (isDoorEvent(event)) {
-            for (Room room : smartHome.getRooms()) {
-                for (Door door : room.getDoors()) {
+            smartHome.execute(component -> {
+                if (component instanceof Door) {
+                    Door door = (Door) component;
                     if (door.getId().equals(event.getObjectId())) {
                         door.setOpen(event.getType() == DOOR_OPEN);
                         String doorState = (event.getType() == DOOR_OPEN) ? "opened." : "closed.";
-                        System.out.println("Door " + door.getId() + " in room " + room.getName() + " was " + doorState);
+                        System.out.println("Door " + door.getId() + " was " + doorState);
                     }
                 }
-            }
+            });
         }
     }
 
