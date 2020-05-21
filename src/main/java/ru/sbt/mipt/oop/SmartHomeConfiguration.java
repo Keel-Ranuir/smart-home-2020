@@ -3,6 +3,8 @@ package ru.sbt.mipt.oop;
 import com.coolcompany.smarthome.events.SensorEventsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import rc.RemoteControlRegistry;
+import ru.sbt.mipt.oop.rc.*;
 
 import java.util.List;
 import java.util.Map;
@@ -57,5 +59,59 @@ public class SmartHomeConfiguration {
         SensorEventsManager sensorEventsManager = new SensorEventsManager();
         sensorEventsManager.registerEventHandler(adapter);
         return sensorEventsManager;
+    }
+
+    @Bean
+    String code() {
+        return "activate";
+    }
+
+    @Bean
+    Command activateAlarmCommand(SmartHome smartHome) {
+        return new ActivateAlarmCommand(smartHome, code());
+    }
+
+    @Bean
+    Command closeHallDoorCommand(SmartHome smartHome) {
+        return new CloseHallDoorCommand(smartHome);
+    }
+
+    @Bean
+    Command turnOffAllLightsCommand(SmartHome smartHome) {
+        return new TurnOffAllLightsCommand(smartHome);
+    }
+
+    @Bean
+    Command turnOnAlertCommand(SmartHome smartHome) {
+        return new TurnOnAlertCommand(smartHome);
+    }
+
+    @Bean
+    Command turnOnAllLightsCommand(SmartHome smartHome) {
+        return new TurnOnAllLightsCommand(smartHome);
+    }
+
+    @Bean
+    Command turnOnHallLightCommand(SmartHome smartHome) {
+        return new TurnOnHallLightCommand(smartHome);
+    }
+
+    @Bean
+    RemoteControlRegistry remoteControlRegistry(RemoteControl controller, String rcId) {
+        RemoteControlRegistry remoteControlRegistry = new RemoteControlRegistry();
+        remoteControlRegistry.registerRemoteControl(controller, rcId);
+        return remoteControlRegistry;
+    }
+
+    @Bean
+    RemoteControl remoteControl(SmartHome smartHome) {
+        RemoteControl remoteControl = new RemoteControl();
+        remoteControl.setCommand("A", turnOffAllLightsCommand(smartHome));
+        remoteControl.setCommand("B", turnOnAllLightsCommand(smartHome));
+        remoteControl.setCommand("C", turnOnHallLightCommand(smartHome));
+        remoteControl.setCommand("D", closeHallDoorCommand(smartHome));
+        remoteControl.setCommand("1", activateAlarmCommand(smartHome));
+        remoteControl.setCommand("2", turnOnAlertCommand(smartHome));
+        return remoteControl;
     }
 }
