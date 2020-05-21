@@ -1,20 +1,16 @@
 package ru.sbt.mipt.oop;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.coolcompany.smarthome.events.SensorEventsManager;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 public class Application {
 
     public static void main(String... args) {
-        SmartHome smartHome = new SmartHomeJsonReader().readSmartHome("smart-home-1.js");
-
-        List<EventProcessor> processors = Arrays.asList(new DoorEventProcessor(),
-                new LightEventProcessor(), new HallDoorEventProcessor());
-        AlarmEventProcessorDecorator alarmEventProcessorDecorator = new AlarmEventProcessorDecorator(processors);
-        SmartHomeProcessor smartHomeProcessor = new SmartHomeProcessor(Collections.singletonList(alarmEventProcessorDecorator));
-        smartHomeProcessor.process(smartHome);
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(SmartHomeConfiguration.class);
+        SensorEventsManager sensorEventsManager = context.getBean(SensorEventsManager.class);
+        sensorEventsManager.start();
     }
+
 
 }
